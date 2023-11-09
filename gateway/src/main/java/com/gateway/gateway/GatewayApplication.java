@@ -1,13 +1,13 @@
-package com.apiGateway.apiGwBicicletas;
+package com.gateway.gateway;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ApiGwBicicletasApplication {
+public class GatewayApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(ApiGwBicicletasApplication.class, args);
+		SpringApplication.run(GatewayApplication.class, args);
 	}
 
 }

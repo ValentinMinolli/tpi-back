@@ -14,30 +14,21 @@ import java.time.LocalDateTime;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AlquilerResponse {
-
-
     Integer id;
 
-
     String cliente;
-
 
     Integer estado;
 
     Estacion estacionRetiro;
 
-
     Estacion estacionDevolucion;
-
 
     LocalDateTime fechaHoraRetiro;
 
-
     LocalDateTime fechaHoraDevolucion;
 
-
     Float monto;
-
 
     Tarifa tarifa;
 
