@@ -1,7 +1,5 @@
 package com.alquileres.alquileres.model;
 
-import com.estaciones.estaciones.model.Estacion;
-import com.estaciones.estaciones.model.Tarifa;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -45,4 +43,12 @@ public class Alquiler {
     @JoinColumn(name = "id_tarifa")
     Tarifa tarifa;
 
+    public Alquiler(Integer aId, Estacion aEstacionRetiro) {
+        id = aId;
+        cliente = "a1";
+        estado = 1;
+        estacionRetiro = aEstacionRetiro;
+        fechaHoraRetiro = LocalDateTime.now();
+
+    }
 }

@@ -2,6 +2,7 @@ package com.alquileres.alquileres.application.controllers;
 
 import com.alquileres.alquileres.application.ResponseHandler;
 import com.alquileres.alquileres.application.response.AlquilerResponse;
+import com.alquileres.alquileres.model.Alquiler;
 import com.alquileres.alquileres.services.AlquilerServiceImpl;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -60,4 +61,18 @@ public class AlquilerController {
             return ResponseHandler.internalError();
         }
     }
+
+    /*@PostMapping("/iniciarAlquiler/{idEstacion}")
+    public ResponseEntity<Object> iniciarAlquiler(@PathVariable Integer idEstacion) {
+        try {
+            Alquiler alquiler = alquilerService.create(idEstacion);
+            return ResponseHandler.success(AlquilerResponse.from(alquiler));
+        } catch (IllegalArgumentException e) {
+            return ResponseHandler.badRequest(e.getMessage());
+        } catch (Exception e) {
+            return ResponseHandler.internalError();
+        }
+    }
+
+     */
 }
