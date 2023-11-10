@@ -24,4 +24,6 @@ public interface EstacionService {
                 final LocalDateTime fechaHoraCreacion,
                 final Float latitud,
                 final Float longitud);
+
+    Optional<Estacion> findByUbicacion(final Float latitud, final Float longitud);
 }

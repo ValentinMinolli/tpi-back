@@ -2,6 +2,7 @@ package com.estaciones.estaciones.application.controllers;
 
 import com.estaciones.estaciones.application.ResponseHandler;
 import com.estaciones.estaciones.application.request.CreateEstacionRequest;
+import com.estaciones.estaciones.application.request.EstacionCercanaRequest;
 import com.estaciones.estaciones.application.request.UpdateEstacionRequest;
 import com.estaciones.estaciones.application.response.EstacionResponse;
 import com.estaciones.estaciones.model.Estacion;
@@ -90,6 +91,19 @@ public class EstacionController {
                     aRequest.getLongitud());
 
             return ResponseHandler.success(EstacionResponse.from(estacion));
+        } catch (IllegalArgumentException e) {
+            return ResponseHandler.badRequest(e.getMessage());
+        } catch (Exception e) {
+            return ResponseHandler.internalError();
+        }
+    }
+
+    @GetMapping("/ubicacion")
+    public ResponseEntity<Object> findByUbicacion(@RequestBody EstacionCercanaRequest aRequest) {
+        try {
+            return estacionService.findByUbicacion(aRequest.getLatitud(), aRequest.getLongitud())
+                    .map(aEstacion -> ResponseHandler.success(EstacionResponse.from(aEstacion)))
+                    .orElseGet(ResponseHandler::notFound);
         } catch (IllegalArgumentException e) {
             return ResponseHandler.badRequest(e.getMessage());
         } catch (Exception e) {

@@ -65,4 +65,33 @@ public class EstacionServiceImpl implements  EstacionService{
         estacion.update(nombre, fechaHoraCreacion, latitud, longitud);
         estacionRepository.save(estacion);
     }
+    @Override
+    public Optional<Estacion> findByUbicacion(final Float latitud, final Float longitud) {
+
+        List<Estacion> estaciones = estacionRepository.findAll();
+        Estacion estacionMasCercana = null;
+        double distanciaMasCorta = Double.MAX_VALUE;
+
+        for (Estacion estacion : estaciones) {
+            double distancia = euclideanDistance(latitud, longitud, estacion.getLatitud(), estacion.getLongitud());
+
+            if (distancia < distanciaMasCorta) {
+                distanciaMasCorta = distancia;
+                estacionMasCercana = estacion;
+            }
+        }
+
+        return Optional.ofNullable(estacionMasCercana);
+    }
+
+    private double euclideanDistance(double lat1, double lon1, double lat2, double lon2) {
+        // Distancia euclidiana con cada grado correspondiente a 110,000 metros
+        double degreesToMeters = 110000.0;
+
+        double dLat = (lat2 - lat1) * degreesToMeters;
+        double dLon = (lon2 - lon1) * degreesToMeters;
+
+        return Math.sqrt(dLat * dLat + dLon * dLon);
+    }
+
 }
