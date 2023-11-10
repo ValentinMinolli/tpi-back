@@ -34,15 +34,29 @@ public class GWCongif {
     public SecurityWebFilterChain filterChain(ServerHttpSecurity http) throws Exception {
         http.authorizeExchange(exchanges -> exchanges
 
+                        // Admin y Cliente Puede realizar consultas sobre estaciones
                         .pathMatchers(HttpMethod.GET,"/api/estaciones/**")
                         .hasAnyRole("CLIENTE", "ADMINISTRADOR")
 
+                        // Administrador Puede agregar nuevas estaciones
                         .pathMatchers(HttpMethod.POST,"/api/estaciones/**")
                         .hasRole("ADMINISTRADOR")
 
+                        // Administrador Puede borrar estaciones
                         .pathMatchers(HttpMethod.DELETE,"/api/estaciones/**")
                         .hasRole("ADMINISTRADOR")
 
+                        //Administrador Puede obtener listados sobre los alquileres realizados
+                        .pathMatchers(HttpMethod.GET,"/api/alquileres/**")
+                        .hasRole("ADMINISTRADOR")
+
+                        // Cliente puede iniciar un alquiler
+                        .pathMatchers(HttpMethod.POST,"/api/alquileres/**")
+                        .hasRole("CLIENTE")
+
+                        // Cliente puede finalizar un alquiler
+                        .pathMatchers(HttpMethod.PATCH,"/api/alquileres/**")
+                        .hasRole("CLIENTE")
 
                         // Cualquier otra petición...
                         .anyExchange()
