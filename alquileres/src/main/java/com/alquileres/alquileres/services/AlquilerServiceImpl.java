@@ -1,7 +1,9 @@
 package com.alquileres.alquileres.services;
 
 import com.alquileres.alquileres.model.Alquiler;
+import com.alquileres.alquileres.model.Estacion;
 import com.alquileres.alquileres.repositories.AlquilerRepository;
+import com.alquileres.alquileres.repositories.EstacionRepository;
 import com.alquileres.alquileres.repositories.IdentifierRepositoryImpl;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,9 @@ public class AlquilerServiceImpl implements  AlquilerService{
     @Autowired
     IdentifierRepositoryImpl identifierRepository;
 
+    @Autowired
+    EstacionRepository estacionRepository;
+
     @Override
     public List<Alquiler> findAll() {
         return alquilerRepository.findAll();
@@ -42,13 +47,13 @@ public class AlquilerServiceImpl implements  AlquilerService{
         }
     }
 
-    /*@Override
+    @Override
     @Transactional
     public Alquiler create(final Integer estacionId) {
+        Estacion estacionRetiro = estacionRepository.findById(estacionId).orElseThrow(() -> new IllegalArgumentException("Estacion not found"));
         Integer id = identifierRepository.nextValue("alquileres");
         Alquiler alquiler = new Alquiler(id, estacionRetiro);
         return alquilerRepository.save(alquiler);
     }
 
-     */
 }

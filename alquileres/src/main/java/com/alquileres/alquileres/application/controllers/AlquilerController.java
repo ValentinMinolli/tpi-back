@@ -61,8 +61,7 @@ public class AlquilerController {
             return ResponseHandler.internalError();
         }
     }
-
-    /*@PostMapping("/iniciarAlquiler/{idEstacion}")
+    @PostMapping("/iniciarAlquiler/{idEstacion}")
     public ResponseEntity<Object> iniciarAlquiler(@PathVariable Integer idEstacion) {
         try {
             Alquiler alquiler = alquilerService.create(idEstacion);
@@ -74,5 +73,4 @@ public class AlquilerController {
         }
     }
 
-     */
 }

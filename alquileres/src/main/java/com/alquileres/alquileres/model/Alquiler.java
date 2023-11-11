@@ -3,6 +3,7 @@ package com.alquileres.alquileres.model;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import java.time.LocalDateTime;
 
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 @Table(name = "alquileres")
 @Getter
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@NoArgsConstructor
 public class Alquiler {
 
     @Id
@@ -48,7 +50,10 @@ public class Alquiler {
         cliente = "a1";
         estado = 1;
         estacionRetiro = aEstacionRetiro;
+        estacionDevolucion = null;
         fechaHoraRetiro = LocalDateTime.now();
-
+        fechaHoraDevolucion = null;
+        monto = null;
+        tarifa = null;
     }
 }
