@@ -76,10 +76,13 @@ public class AlquilerController {
 
     @PatchMapping("/finalizarAlquiler/{idAlquiler}")
     public ResponseEntity<Object> finalizarAlquiler(@PathVariable Integer idAlquiler, @RequestBody FinalizarAlquilerRequest aAlquiler) {
-
+        try {
             Alquiler alquiler = alquilerService.finalizarAlquiler(idAlquiler, aAlquiler.getEstacionDevolucion(), aAlquiler.getMoneda());
             return ResponseHandler.success(AlquilerResponse.from(alquiler));
-
+        } catch (IllegalArgumentException e) {
+            return ResponseHandler.badRequest(e.getMessage());
+        } catch (Exception e) {
+            return ResponseHandler.internalError();
+        }
     }
-
 }

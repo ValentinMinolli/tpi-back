@@ -1,5 +1,7 @@
 package com.alquileres.alquileres.services;
 
+import com.alquileres.alquileres.application.request.MontoRequest;
+import com.alquileres.alquileres.application.response.MontoResponse;
 import com.alquileres.alquileres.model.Alquiler;
 import com.alquileres.alquileres.model.Estacion;
 import com.alquileres.alquileres.model.Tarifa;
@@ -10,8 +12,10 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -66,6 +70,7 @@ public class AlquilerServiceImpl implements  AlquilerService{
     @Transactional
     public Alquiler finalizarAlquiler(final Integer idAlquiler, final Integer idEstacionDevolucion, final String moneda) {
         Alquiler alquiler = alquilerRepository.findById(idAlquiler).orElseThrow(() -> new IllegalArgumentException("Alquiler not found"));
+        LocalDateTime fechaHoraDevolucion = LocalDateTime.now();
 
         // Buscar la tarifa correspondiente
         int diaMesRetiro = alquiler.getFechaHoraRetiro().getDayOfMonth();
@@ -94,18 +99,15 @@ public class AlquilerServiceImpl implements  AlquilerService{
             Estacion estacionDevolucion = estacionRepository.findById(idEstacionDevolucion)
                     .orElseThrow(() -> new IllegalArgumentException("Estacion de devolucion not found"));
             Estacion estacionRetiro = alquiler.getEstacionRetiro();
-            double distanciaEntreEstaciones = euclideanDistance(estacionDevolucion.getLatitud(), estacionDevolucion.getLongitud(), estacionRetiro.getLatitud(), estacionRetiro.getLongitud()) / 1000 ;
+            double distanciaEntreEstaciones = this.euclideanDistance(estacionDevolucion.getLatitud(), estacionDevolucion.getLongitud(), estacionRetiro.getLatitud(), estacionRetiro.getLongitud()) / 1000 ;
             int cantidadKilimetros = (int) distanciaEntreEstaciones;
             Float montoAdicionalKM = cantidadKilimetros * tarifaSeleccionada.getMontoKm();
 
 
             //Calcular el monto por hora y minuto
-            LocalDateTime fechaHoraDevolucion = LocalDateTime.now();
             Duration duration = Duration.between(alquiler.getFechaHoraRetiro(), fechaHoraDevolucion);
             long horas = duration.toHours();
             long minutosSobrantes = duration.toMinutes() % 60;
-            System.out.println(horas);
-            System.out.println(minutosSobrantes);
 
             float montoPorHora = horas * tarifaSeleccionada.getMontoHora();
 
@@ -119,6 +121,13 @@ public class AlquilerServiceImpl implements  AlquilerService{
             // Calculamos el monto total
             float montoTotal = montoPorHora + montoPorMinutos + tarifaSeleccionada.getMontoFijoAlquiler() + montoAdicionalKM;
 
+
+        // Calcular montoTotal en la divisa seleccionada si corresponde
+        if (moneda != null) {
+            montoTotal = this.conversionMoneda(moneda, montoTotal);
+        }
+
+        // Actualizar y finalizar el alquiler con los datos correspondientes
         alquiler.update(montoTotal, tarifaSeleccionada, fechaHoraDevolucion, estacionDevolucion);
         return alquilerRepository.save(alquiler);
     }
@@ -131,5 +140,26 @@ public class AlquilerServiceImpl implements  AlquilerService{
         double dLon = (lon2 - lon1) * degreesToMeters;
 
         return Math.sqrt(dLat * dLat + dLon * dLon);
+    }
+
+    private float conversionMoneda(String moneda, float montoTotal) {
+            RestTemplate restTemplate = new RestTemplate();
+
+            // Construir el objeto de solicitud para la API externa
+            MontoRequest request = new MontoRequest(moneda, montoTotal);
+
+            try {
+                // Llamar a la API mandandole el request
+                ResponseEntity<MontoResponse> responseEntity = restTemplate.postForEntity("http://34.82.105.125:8080/convertir", request, MontoResponse.class);
+                // Obtener la respuesta de la API
+                MontoResponse montoResponse = responseEntity.getBody();
+
+                // Actualizar el monto total con la respuesta de la API
+                montoTotal = (float) montoResponse.getImporte();
+
+                return montoTotal;
+            } catch (Exception e) {
+                throw new IllegalArgumentException("Moneda no soportada");
+            }
     }
 }
