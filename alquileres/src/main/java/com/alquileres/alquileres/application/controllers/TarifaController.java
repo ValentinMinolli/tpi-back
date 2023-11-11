@@ -1,8 +1,9 @@
-package com.estaciones.estaciones.application.controllers;
+package com.alquileres.alquileres.application.controllers;
 
-import com.estaciones.estaciones.application.ResponseHandler;
-import com.estaciones.estaciones.application.response.TarifaResponse;
-import com.estaciones.estaciones.services.TarifaServiceImpl;
+
+import com.alquileres.alquileres.application.ResponseHandler;
+import com.alquileres.alquileres.application.response.TarifaResponse;
+import com.alquileres.alquileres.services.TarifaServiceImpl;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;

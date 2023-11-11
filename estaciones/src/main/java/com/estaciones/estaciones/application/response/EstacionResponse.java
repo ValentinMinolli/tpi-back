@@ -1,9 +1,6 @@
 package com.estaciones.estaciones.application.response;
 
 import com.estaciones.estaciones.model.Estacion;
-import com.estaciones.estaciones.model.Tarifa;
-import jakarta.persistence.Column;
-import jakarta.persistence.Id;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;

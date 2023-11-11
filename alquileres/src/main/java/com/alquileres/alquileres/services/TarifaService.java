@@ -1,6 +1,8 @@
-package com.estaciones.estaciones.services;
+package com.alquileres.alquileres.services;
 
-import com.estaciones.estaciones.model.Tarifa;
+
+
+import com.alquileres.alquileres.model.Tarifa;
 
 import java.util.List;
 import java.util.Optional;

@@ -1,9 +1,9 @@
-package com.estaciones.estaciones.services;
+package com.alquileres.alquileres.services;
 
-import com.estaciones.estaciones.model.Estacion;
-import com.estaciones.estaciones.model.Tarifa;
-import com.estaciones.estaciones.repositories.IdentifierRepository;
-import com.estaciones.estaciones.repositories.TarifaRepository;
+
+import com.alquileres.alquileres.model.Tarifa;
+import com.alquileres.alquileres.repositories.IdentifierRepository;
+import com.alquileres.alquileres.repositories.TarifaRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;

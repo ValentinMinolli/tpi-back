@@ -1,6 +1,6 @@
-package com.estaciones.estaciones.repositories;
+package com.alquileres.alquileres.repositories;
 
-import com.estaciones.estaciones.model.Tarifa;
+import com.alquileres.alquileres.model.Tarifa;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

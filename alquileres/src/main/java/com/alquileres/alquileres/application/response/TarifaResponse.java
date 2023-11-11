@@ -1,6 +1,7 @@
-package com.estaciones.estaciones.application.response;
+package com.alquileres.alquileres.application.response;
 
-import com.estaciones.estaciones.model.Tarifa;
+
+import com.alquileres.alquileres.model.Tarifa;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
