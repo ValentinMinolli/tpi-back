@@ -14,4 +14,6 @@ public interface TarifaService {
     Optional<Tarifa> findById(final Integer id);
 
     void delete(final Integer id);
+
+    Tarifa findByDiaSemana(int diaSemana);
 }

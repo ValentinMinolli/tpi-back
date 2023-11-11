@@ -2,6 +2,7 @@ package com.alquileres.alquileres.services;
 
 import com.alquileres.alquileres.model.Alquiler;
 import com.alquileres.alquileres.model.Estacion;
+import com.alquileres.alquileres.model.Tarifa;
 import com.alquileres.alquileres.repositories.AlquilerRepository;
 import com.alquileres.alquileres.repositories.EstacionRepository;
 import com.alquileres.alquileres.repositories.IdentifierRepositoryImpl;
@@ -12,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,6 +30,9 @@ public class AlquilerServiceImpl implements  AlquilerService{
 
     @Autowired
     EstacionRepository estacionRepository;
+
+    @Autowired
+    TarifaServiceImpl tarifaService;
 
     @Override
     public List<Alquiler> findAll() {
@@ -56,4 +62,74 @@ public class AlquilerServiceImpl implements  AlquilerService{
         return alquilerRepository.save(alquiler);
     }
 
+    @Override
+    @Transactional
+    public Alquiler finalizarAlquiler(final Integer idAlquiler, final Integer idEstacionDevolucion, final String moneda) {
+        Alquiler alquiler = alquilerRepository.findById(idAlquiler).orElseThrow(() -> new IllegalArgumentException("Alquiler not found"));
+
+        // Buscar la tarifa correspondiente
+        int diaMesRetiro = alquiler.getFechaHoraRetiro().getDayOfMonth();
+        int mesRetiro = alquiler.getFechaHoraRetiro().getMonthValue();
+        int anioRetiro = alquiler.getFechaHoraRetiro().getYear();
+        int diaSemana = alquiler.getFechaHoraRetiro().getDayOfWeek().getValue();
+
+        Tarifa tarifaSeleccionada = tarifaService.findByDiaSemana(diaSemana);
+        List<Tarifa> listaTarifas = tarifaService.findAll();
+        List<Tarifa> tarifasFiltradas = listaTarifas.stream()
+                .filter(tarifa -> "C".equals(tarifa.getDefinicion()))
+                .toList();
+
+        for (Tarifa tarifa : tarifasFiltradas) {
+            if (diaMesRetiro == tarifa.getDiaMes()
+                    && mesRetiro == tarifa.getMes()
+                    && anioRetiro == tarifa.getAnio()) {
+                tarifaSeleccionada = tarifa;
+                break;
+            }
+        }
+
+        // Calcular Monto TOTAL a cobrar
+
+            //Calculo de la distancia entre ambas estaciones
+            Estacion estacionDevolucion = estacionRepository.findById(idEstacionDevolucion)
+                    .orElseThrow(() -> new IllegalArgumentException("Estacion de devolucion not found"));
+            Estacion estacionRetiro = alquiler.getEstacionRetiro();
+            double distanciaEntreEstaciones = euclideanDistance(estacionDevolucion.getLatitud(), estacionDevolucion.getLongitud(), estacionRetiro.getLatitud(), estacionRetiro.getLongitud()) / 1000 ;
+            int cantidadKilimetros = (int) distanciaEntreEstaciones;
+            Float montoAdicionalKM = cantidadKilimetros * tarifaSeleccionada.getMontoKm();
+
+
+            //Calcular el monto por hora y minuto
+            LocalDateTime fechaHoraDevolucion = LocalDateTime.now();
+            Duration duration = Duration.between(alquiler.getFechaHoraRetiro(), fechaHoraDevolucion);
+            long horas = duration.toHours();
+            long minutosSobrantes = duration.toMinutes() % 60;
+            System.out.println(horas);
+            System.out.println(minutosSobrantes);
+
+            float montoPorHora = horas * tarifaSeleccionada.getMontoHora();
+
+            float montoPorMinutos = 0;
+            if (minutosSobrantes < 31) {
+                montoPorMinutos = minutosSobrantes * tarifaSeleccionada.getMontoMinutoFraccion();
+            } else {
+                montoPorMinutos = tarifaSeleccionada.getMontoHora();
+            }
+
+            // Calculamos el monto total
+            float montoTotal = montoPorHora + montoPorMinutos + tarifaSeleccionada.getMontoFijoAlquiler() + montoAdicionalKM;
+
+        alquiler.update(montoTotal, tarifaSeleccionada, fechaHoraDevolucion, estacionDevolucion);
+        return alquilerRepository.save(alquiler);
+    }
+
+    private double euclideanDistance(double lat1, double lon1, double lat2, double lon2) {
+        // Distancia euclidiana con cada grado correspondiente a 110,000 metros
+        double degreesToMeters = 110000.0;
+
+        double dLat = (lat2 - lat1) * degreesToMeters;
+        double dLon = (lon2 - lon1) * degreesToMeters;
+
+        return Math.sqrt(dLat * dLat + dLon * dLon);
+    }
 }

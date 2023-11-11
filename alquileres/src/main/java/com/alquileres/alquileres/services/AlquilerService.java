@@ -15,4 +15,5 @@ public interface AlquilerService {
 
     Alquiler create(final Integer estacionId);
 
+    Alquiler finalizarAlquiler(final Integer idAlquiler, final Integer idEstacionDevolucion, final String moneda);
 }

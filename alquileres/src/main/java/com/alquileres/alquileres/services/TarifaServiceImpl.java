@@ -23,19 +23,27 @@ public class TarifaServiceImpl implements TarifaService{
     @Autowired
     IdentifierRepository identifierRepositoryImpl;
 
+    @Override
     public List<Tarifa> findAll() {
         return tarifaRepository.findAll();
     }
 
+    @Override
     public Optional<Tarifa> findById(final Integer id) {
         return tarifaRepository.findById(id);
     }
 
+    @Override
     public void delete(final Integer id) {
         try {
             tarifaRepository.deleteById(id);
         } catch (Exception e) {
             throw new IllegalArgumentException("Customer not found");
         }
+    }
+
+    @Override
+    public Tarifa findByDiaSemana(int diaSemana) {
+        return tarifaRepository.findByDiaSemana(diaSemana);
     }
 }

@@ -1,6 +1,7 @@
 package com.alquileres.alquileres.application.controllers;
 
 import com.alquileres.alquileres.application.ResponseHandler;
+import com.alquileres.alquileres.application.request.FinalizarAlquilerRequest;
 import com.alquileres.alquileres.application.response.AlquilerResponse;
 import com.alquileres.alquileres.model.Alquiler;
 import com.alquileres.alquileres.services.AlquilerServiceImpl;
@@ -71,6 +72,14 @@ public class AlquilerController {
         } catch (Exception e) {
             return ResponseHandler.internalError();
         }
+    }
+
+    @PatchMapping("/finalizarAlquiler/{idAlquiler}")
+    public ResponseEntity<Object> finalizarAlquiler(@PathVariable Integer idAlquiler, @RequestBody FinalizarAlquilerRequest aAlquiler) {
+
+            Alquiler alquiler = alquilerService.finalizarAlquiler(idAlquiler, aAlquiler.getEstacionDevolucion(), aAlquiler.getMoneda());
+            return ResponseHandler.success(AlquilerResponse.from(alquiler));
+
     }
 
 }

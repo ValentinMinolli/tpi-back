@@ -56,4 +56,12 @@ public class Alquiler {
         monto = null;
         tarifa = null;
     }
+
+    public void update(float montoTotal, Tarifa tarifaSeleccionada, LocalDateTime fechaHoraDevolucion, Estacion estacionDevolucion) {
+        this.estado = 2;
+        this.estacionDevolucion = estacionDevolucion;
+        this.fechaHoraDevolucion = fechaHoraDevolucion;
+        this.monto = montoTotal;
+        this.tarifa = tarifaSeleccionada;
+    }
 }
