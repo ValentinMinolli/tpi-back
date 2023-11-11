@@ -44,6 +44,11 @@ public class AlquilerServiceImpl implements  AlquilerService{
     }
 
     @Override
+    public List<Alquiler> findByEstado() {
+        return alquilerRepository.findByEstado(2);
+    }
+
+    @Override
     public Optional<Alquiler> findById(final Integer id) {
         return alquilerRepository.findById(id);
     }

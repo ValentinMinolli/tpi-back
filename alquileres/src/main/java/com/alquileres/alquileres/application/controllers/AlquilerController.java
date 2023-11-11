@@ -37,6 +37,22 @@ public class AlquilerController {
         }
     }
 
+    //Obtener un listado de los alquileres realizados aplicando, por lo menos, un filtro(Estado = 2)
+    @GetMapping("/finalizados")
+    public ResponseEntity<Object> encontrarAlquileresFinalizados() {
+        try {
+            List<AlquilerResponse> alquileres = alquilerService.findByEstado()
+                    .stream()
+                    .map(AlquilerResponse::from)
+                    .toList();
+
+            return ResponseHandler.success(alquileres);
+        } catch (IllegalArgumentException e) {
+            return ResponseHandler.badRequest(e.getMessage());
+        } catch (Exception e) {
+            return ResponseHandler.internalError();
+        }
+    }
     @GetMapping("/{id}")
     public ResponseEntity<Object> findOne(@PathVariable Integer id) {
         try {
@@ -62,6 +78,8 @@ public class AlquilerController {
             return ResponseHandler.internalError();
         }
     }
+
+    //Iniciar el alquiler de una bicicleta desde una estación dada
     @PostMapping("/iniciarAlquiler/{idEstacion}")
     public ResponseEntity<Object> iniciarAlquiler(@PathVariable Integer idEstacion) {
         try {
@@ -74,6 +92,7 @@ public class AlquilerController {
         }
     }
 
+    //Finalizar un alquiler en curso, informando los datos del mismo y el costo expresado en la moneda que el cliente desee.
     @PatchMapping("/finalizarAlquiler/{idAlquiler}")
     public ResponseEntity<Object> finalizarAlquiler(@PathVariable Integer idAlquiler, @RequestBody FinalizarAlquilerRequest aAlquiler) {
         try {

@@ -23,6 +23,7 @@ public class EstacionController {
 
     EstacionServiceImpl estacionService;
 
+    //Consultar el listado de todas las estaciones disponibles en la ciudad
     @GetMapping
     public ResponseEntity<Object> findAll() {
         try {
@@ -81,6 +82,7 @@ public class EstacionController {
         }
     }
 
+    //Agregar una nueva estación al sistema
     @PostMapping
     public ResponseEntity<Object> create(@RequestBody CreateEstacionRequest aRequest) {
         try {
@@ -98,6 +100,7 @@ public class EstacionController {
         }
     }
 
+    //Consultar los datos de la estación más cercana a una ubicación provista por el cliente.
     @GetMapping("/ubicacion")
     public ResponseEntity<Object> findByUbicacion(@RequestBody EstacionCercanaRequest aRequest) {
         try {
