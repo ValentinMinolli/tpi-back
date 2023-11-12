@@ -6,6 +6,7 @@ import com.alquileres.alquileres.application.request.IniciarAlquilerRequest;
 import com.alquileres.alquileres.application.response.AlquilerResponse;
 import com.alquileres.alquileres.model.Alquiler;
 import com.alquileres.alquileres.services.AlquilerServiceImpl;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -82,7 +83,7 @@ public class AlquilerController {
 
     //Iniciar el alquiler de una bicicleta desde una estación dada
     @PostMapping("/iniciarAlquiler/{idEstacion}")
-    public ResponseEntity<Object> iniciarAlquiler(@PathVariable Integer idEstacion, @RequestBody IniciarAlquilerRequest aAlquiler) {
+    public ResponseEntity<Object> iniciarAlquiler(@PathVariable Integer idEstacion, @Valid @RequestBody IniciarAlquilerRequest aAlquiler) {
         try {
             Alquiler alquiler = alquilerService.create(idEstacion, aAlquiler.getIdCliente());
             return ResponseHandler.success(AlquilerResponse.from(alquiler));
@@ -95,7 +96,7 @@ public class AlquilerController {
 
     //Finalizar un alquiler en curso, informando los datos del mismo y el costo expresado en la moneda que el cliente desee.
     @PatchMapping("/finalizarAlquiler/{idAlquiler}")
-    public ResponseEntity<Object> finalizarAlquiler(@PathVariable Integer idAlquiler, @RequestBody FinalizarAlquilerRequest aAlquiler) {
+    public ResponseEntity<Object> finalizarAlquiler(@PathVariable Integer idAlquiler, @Valid @RequestBody FinalizarAlquilerRequest aAlquiler) {
         try {
             Alquiler alquiler = alquilerService.finalizarAlquiler(idAlquiler, aAlquiler.getEstacionDevolucion(), aAlquiler.getMoneda());
             return ResponseHandler.success(AlquilerResponse.from(alquiler));

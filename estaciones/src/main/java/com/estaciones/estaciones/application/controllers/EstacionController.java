@@ -7,6 +7,7 @@ import com.estaciones.estaciones.application.request.UpdateEstacionRequest;
 import com.estaciones.estaciones.application.response.EstacionResponse;
 import com.estaciones.estaciones.model.Estacion;
 import com.estaciones.estaciones.services.EstacionServiceImpl;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -67,7 +68,7 @@ public class EstacionController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Object> update(@PathVariable Integer id, @RequestBody UpdateEstacionRequest aRequest) {
+    public ResponseEntity<Object> update(@PathVariable Integer id, @Valid @RequestBody UpdateEstacionRequest aRequest) {
         try {
             estacionService.update(id,
                     aRequest.getNombre(),
@@ -84,7 +85,7 @@ public class EstacionController {
 
     //Agregar una nueva estación al sistema
     @PostMapping
-    public ResponseEntity<Object> create(@RequestBody CreateEstacionRequest aRequest) {
+    public ResponseEntity<Object> create(@Valid @RequestBody CreateEstacionRequest aRequest) {
         try {
             Estacion estacion = estacionService.create(
                     aRequest.getNombre(),
@@ -102,7 +103,7 @@ public class EstacionController {
 
     //Consultar los datos de la estación más cercana a una ubicación provista por el cliente.
     @GetMapping("/ubicacion")
-    public ResponseEntity<Object> findByUbicacion(@RequestBody EstacionCercanaRequest aRequest) {
+    public ResponseEntity<Object> findByUbicacion(@Valid @RequestBody EstacionCercanaRequest aRequest) {
         try {
             return estacionService.findByUbicacion(aRequest.getLatitud(), aRequest.getLongitud())
                     .map(aEstacion -> ResponseHandler.success(EstacionResponse.from(aEstacion)))
