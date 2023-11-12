@@ -2,6 +2,7 @@ package com.alquileres.alquileres.application.controllers;
 
 import com.alquileres.alquileres.application.ResponseHandler;
 import com.alquileres.alquileres.application.request.FinalizarAlquilerRequest;
+import com.alquileres.alquileres.application.request.IniciarAlquilerRequest;
 import com.alquileres.alquileres.application.response.AlquilerResponse;
 import com.alquileres.alquileres.model.Alquiler;
 import com.alquileres.alquileres.services.AlquilerServiceImpl;
@@ -81,9 +82,9 @@ public class AlquilerController {
 
     //Iniciar el alquiler de una bicicleta desde una estación dada
     @PostMapping("/iniciarAlquiler/{idEstacion}")
-    public ResponseEntity<Object> iniciarAlquiler(@PathVariable Integer idEstacion) {
+    public ResponseEntity<Object> iniciarAlquiler(@PathVariable Integer idEstacion, @RequestBody IniciarAlquilerRequest aAlquiler) {
         try {
-            Alquiler alquiler = alquilerService.create(idEstacion);
+            Alquiler alquiler = alquilerService.create(idEstacion, aAlquiler.getIdCliente());
             return ResponseHandler.success(AlquilerResponse.from(alquiler));
         } catch (IllegalArgumentException e) {
             return ResponseHandler.badRequest(e.getMessage());

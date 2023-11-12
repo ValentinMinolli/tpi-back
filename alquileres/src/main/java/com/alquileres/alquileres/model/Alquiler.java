@@ -45,9 +45,9 @@ public class Alquiler {
     @JoinColumn(name = "id_tarifa")
     Tarifa tarifa;
 
-    public Alquiler(Integer aId, Estacion aEstacionRetiro) {
+    public Alquiler(Integer aId, Estacion aEstacionRetiro, String idCliente) {
         id = aId;
-        cliente = "a1";
+        cliente = idCliente;
         estado = 1;
         estacionRetiro = aEstacionRetiro;
         estacionDevolucion = null;

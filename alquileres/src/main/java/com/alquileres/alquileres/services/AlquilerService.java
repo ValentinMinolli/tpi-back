@@ -13,7 +13,7 @@ public interface AlquilerService {
 
     void delete(final Integer id);
 
-    Alquiler create(final Integer estacionId);
+    Alquiler create(final Integer estacionId, final String idCliente);
 
     Alquiler finalizarAlquiler(final Integer idAlquiler, final Integer idEstacionDevolucion, final String moneda);
 

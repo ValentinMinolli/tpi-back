@@ -64,10 +64,10 @@ public class AlquilerServiceImpl implements  AlquilerService{
 
     @Override
     @Transactional
-    public Alquiler create(final Integer estacionId) {
+    public Alquiler create(final Integer estacionId, final String idCliente) {
         Estacion estacionRetiro = estacionRepository.findById(estacionId).orElseThrow(() -> new IllegalArgumentException("Estacion not found"));
         Integer id = identifierRepository.nextValue("alquileres");
-        Alquiler alquiler = new Alquiler(id, estacionRetiro);
+        Alquiler alquiler = new Alquiler(id, estacionRetiro, idCliente);
         return alquilerRepository.save(alquiler);
     }
 
