@@ -22,9 +22,9 @@ public class GWCongif {
                                         @Value("${trabajo-practico.url-microservicio-alquileres}") String uriAlquileres,
                                         @Value("${trabajo-practico.url-microservicio-estaciones}") String uriEstaciones) {
         return builder.routes()
-                // Ruteo al Microservicio de Personas
+                // Ruteo al Microservicio de Alquileres
                 .route(p -> p.path("/api/alquileres/**").uri(uriAlquileres))
-                // Ruteo al Microservicio de Entradas
+                // Ruteo al Microservicio de Estaciones
                 .route(p -> p.path("/api/estaciones/**").uri(uriEstaciones))
                 .build();
 
